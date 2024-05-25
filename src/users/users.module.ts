@@ -12,5 +12,6 @@ import { CashsModule } from '@/../src/cashes/cashs.module';
   ],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}

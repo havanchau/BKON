@@ -37,7 +37,7 @@ export class UsersService {
         account: 'Default',
         balance: 0,
         createdAt: new Date(),
-        userId: createdUser._id, // Assuming you need to link Cash to User
+        uid: createdUser._id, // Assuming you need to link Cash to User
       });
 
       await defaultCash.save({ session });
@@ -62,9 +62,7 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User> {
-    const user = await this.userModel
-      .findOne({ email }, { password: 0 })
-      .exec();
+    const user = await this.userModel.findOne({ email }).exec();
     if (!user) {
       throw new NotFoundException('User not found');
     }

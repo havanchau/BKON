@@ -7,10 +7,9 @@ export type CashDocument = HydratedDocument<Cash>;
 
 @Schema()
 export class Cash {
+  @ApiProperty({ type: Date, description: 'createdAt' })
   @Prop({ required: true })
-  @IsString()
-  @ApiProperty({ type: String, description: 'uid' })
-  uid: string;
+  createdAt: Date;
 
   @Prop({ required: true })
   @IsString()
@@ -21,10 +20,6 @@ export class Cash {
   @Prop()
   @IsNumber()
   balance: number;
-
-  @ApiProperty({ type: Date, description: 'createdAt' })
-  @Prop({ required: true })
-  createdAt: Date;
 }
 
 export const CashSchema = SchemaFactory.createForClass(Cash);
