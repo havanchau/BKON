@@ -6,11 +6,13 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { Cash, CashDocument } from '../cashes/cashs.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(Cash.name) private readonly cashModel: Model<CashDocument>,
   ) {}
 
   async findAll(): Promise<User[]> {
@@ -24,11 +26,45 @@ export class UsersService {
       password: hashPassword,
       createdAt: new Date(),
     });
-    return await createdUser.save();
+
+    const session = await this.userModel.db.startSession();
+    session.startTransaction();
+
+    try {
+      await createdUser.save({ session });
+
+      const defaultCash = new this.cashModel({
+        account: 'Default',
+        balance: 0,
+        createdAt: new Date(),
+        userId: createdUser._id, // Assuming you need to link Cash to User
+      });
+
+      await defaultCash.save({ session });
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return createdUser;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
 
   async findById(id: string): Promise<User> {
     const user = await this.userModel.findById(id, { password: 0 }).exec();
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userModel
+      .findOne({ email }, { password: 0 })
+      .exec();
     if (!user) {
       throw new NotFoundException('User not found');
     }

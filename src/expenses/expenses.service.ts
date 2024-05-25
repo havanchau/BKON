@@ -5,14 +5,14 @@ import { Model } from 'mongoose';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { FilterExpenseDto } from './dto/filter-expense.dto';
-import { Cash, CashDocument } from '@/../src/cashes/cashs.schema';
+import { Cash } from '@/../src/cashes/cashs.schema';
 
 @Injectable()
 export class ExpensesService {
   constructor(
     @InjectModel(Expense.name)
     private readonly expenseModel: Model<ExpenseDocument>,
-    @InjectModel(Cash.name) private readonly cashModel: Model<CashDocument>,
+    @InjectModel(Cash.name) private readonly cashModel: Model<Cash>,
   ) {}
 
   async findAll(filterExpenseDto: FilterExpenseDto): Promise<Expense[]> {
