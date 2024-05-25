@@ -5,7 +5,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CashsService } from './cashs.service';
+import { DebtsService } from './debts.service';
 import {
   Controller,
   Get,
@@ -17,57 +17,68 @@ import {
   NotFoundException,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
-import { UpdateCashDto } from './dto/update-cash.dto';
-import { CreateCashDto } from './dto/create-cash.dto';
-import { Cash } from './cashs.schema';
+import { UpdateDebtDto } from './dto/update-debt.dto';
+import { CreateDebtDto } from './dto/create-debt.dto';
+import { Debt } from './debts.schema';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('cash')
-@ApiTags('cash')
+@Controller('debts')
+@ApiTags('debts')
 @UseGuards(AuthGuard('jwt'))
-export class CashsController {
-  constructor(private readonly cashsService: CashsService) {}
+export class DebtsController {
+  constructor(private readonly debtsService: DebtsService) {}
 
   @Post()
   @ApiCreatedResponse({
     description: 'Created Successfully',
-    type: Cash,
+    type: Debt,
     isArray: false,
   })
   @ApiBadRequestResponse({ description: 'Bad Request' })
-  async create(@Body() createCashDto: CreateCashDto, @Request() req: any) {
-    return this.cashsService.create(createCashDto, req.user.userId);
+  async create(@Body() createDebtDto: CreateDebtDto, @Request() req: any) {
+    return this.debtsService.create(createDebtDto, req.user.userId);
   }
 
   @Get()
   @ApiOkResponse({
-    type: Cash,
+    type: Debt,
     isArray: true,
   })
-  async findAll(@Request() req: any) {
-    return await this.cashsService.findAll(req.user.userId);
+  async findAll(
+    @Request() req: any,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    const userId = req.user.userId;
+    const debts = await this.debtsService.findAll(
+      userId,
+      startDate && new Date(startDate),
+      endDate && new Date(endDate),
+    );
+    return debts;
   }
 
   @Get(':id')
   @ApiOkResponse({
-    type: Cash,
+    type: Debt,
     isArray: false,
   })
   @ApiNotFoundResponse({
     description: 'Not Found',
   })
   async findOne(@Param('id') id: string, @Request() req: any) {
-    const cash = await this.cashsService.findById(id, req.user.userId);
-    if (!cash) {
-      throw new NotFoundException('Cash not found');
+    const debt = await this.debtsService.findById(id, req.user.userId);
+    if (!debt) {
+      throw new NotFoundException('Debt not found');
     }
-    return cash;
+    return debt;
   }
 
   @Put(':id')
   @ApiOkResponse({
-    type: Cash,
+    type: Debt,
     isArray: false,
   })
   @ApiNotFoundResponse({
@@ -76,10 +87,10 @@ export class CashsController {
   @ApiBadRequestResponse({ description: 'Bad Request' })
   async update(
     @Param('id') id: string,
-    @Body() updateCashDto: UpdateCashDto,
+    @Body() updateDebtDto: UpdateDebtDto,
     @Request() req: any,
   ) {
-    return this.cashsService.update(id, updateCashDto, req.user.userId);
+    return this.debtsService.update(id, updateDebtDto, req.user.userId);
   }
 
   @Delete(':id')
@@ -90,6 +101,6 @@ export class CashsController {
     description: 'Not Found',
   })
   async delete(@Param('id') id: string, @Request() req: any) {
-    return this.cashsService.delete(id, req.user.userId);
+    return this.debtsService.delete(id, req.user.userId);
   }
 }

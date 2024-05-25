@@ -1,55 +1,37 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Expense, ExpenseDocument } from './expenses.schema';
 import { Model } from 'mongoose';
+import { Expense, ExpenseDocument } from './expenses.schema';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { FilterExpenseDto } from './dto/filter-expense.dto';
-import { Cash } from '@/../src/cashes/cashs.schema';
+import { Cash, CashDocument } from '../cashes/cashs.schema';
 
 @Injectable()
 export class ExpensesService {
   constructor(
     @InjectModel(Expense.name)
     private readonly expenseModel: Model<ExpenseDocument>,
-    @InjectModel(Cash.name) private readonly cashModel: Model<Cash>,
+    @InjectModel(Cash.name) private readonly cashModel: Model<CashDocument>,
   ) {}
 
-  async findAll(filterExpenseDto: FilterExpenseDto): Promise<Expense[]> {
-    const { uid, startDate, endDate } = filterExpenseDto;
-
-    const filter: any = { uid };
-
-    if (startDate || endDate) {
-      filter.createdAt = {};
-      if (startDate) {
-        filter.createdAt.$gte = new Date(startDate);
-      }
-      if (endDate) {
-        filter.createdAt.$lte = new Date(endDate);
-      }
-    }
-
-    const incomes = await this.expenseModel.find(filter).lean().exec();
-    if (!incomes.length) {
-      throw new NotFoundException('No incomes found');
-    }
-    return incomes;
-  }
-
-  async create(createExpenseDto: CreateExpenseDto): Promise<Expense> {
+  async create(
+    createExpenseDto: CreateExpenseDto,
+    userId: string,
+  ): Promise<Expense> {
     const session = await this.expenseModel.db.startSession();
     session.startTransaction();
 
     try {
-      const createdIncome = new this.expenseModel({
+      const createdExpense = new this.expenseModel({
         ...createExpenseDto,
         createdAt: new Date(),
         completeAt: new Date(),
+        uid: userId,
       });
 
       const cash = await this.cashModel
-        .findOne({ _id: createExpenseDto.cashId })
+        .findOne({ _id: createExpenseDto.cashId, uid: userId })
         .session(session);
 
       if (!cash) {
@@ -59,12 +41,12 @@ export class ExpensesService {
       cash.balance -= createExpenseDto.amount;
       await cash.save({ session });
 
-      await createdIncome.save({ session });
+      await createdExpense.save({ session });
 
       await session.commitTransaction();
       session.endSession();
 
-      return createdIncome;
+      return createdExpense;
     } catch (error) {
       await session.abortTransaction();
       session.endSession();
@@ -72,36 +54,64 @@ export class ExpensesService {
     }
   }
 
-  async findById(id: string): Promise<Expense> {
-    const expense = await this.expenseModel.findById(id).lean().exec();
-    if (!expense) {
-      throw new NotFoundException('Expense not found');
+  async findAll(
+    filterExpenseDto: FilterExpenseDto,
+    userId: string,
+  ): Promise<Expense[]> {
+    const { startDate, endDate } = filterExpenseDto;
+    const query: any = { uid: userId };
+
+    if (startDate) {
+      query.date = { ...query.date, $gte: new Date(startDate) };
     }
-    return expense;
+
+    if (endDate) {
+      query.date = { ...query.date, $lte: new Date(endDate) };
+    }
+
+    return this.expenseModel.find(query).exec();
+  }
+
+  async findById(id: string, userId: string): Promise<Expense> {
+    if (!this.isValidObjectId(id)) {
+      throw new NotFoundException(`Invalid ID format: ${id}`);
+    }
+    return this.expenseModel.findOne({ _id: id, uid: userId }).exec();
   }
 
   async update(
     id: string,
     updateExpenseDto: UpdateExpenseDto,
+    userId: string,
   ): Promise<Expense> {
-    const existingExpense = await this.expenseModel
-      .findByIdAndUpdate(id, updateExpenseDto, { new: true })
-      .lean()
+    if (!this.isValidObjectId(id)) {
+      throw new NotFoundException(`Invalid ID format: ${id}`);
+    }
+    const updatedExpense = await this.expenseModel
+      .findOneAndUpdate({ _id: id, uid: userId }, updateExpenseDto, {
+        new: true,
+      })
       .exec();
-    if (!existingExpense) {
+    if (!updatedExpense) {
       throw new NotFoundException('Expense not found');
     }
-    return existingExpense;
+    return updatedExpense;
   }
 
-  async delete(id: string): Promise<Expense> {
-    const deletedExpense = await this.expenseModel
-      .findByIdAndDelete(id)
-      .lean()
+  async delete(id: string, userId: string): Promise<any> {
+    if (!this.isValidObjectId(id)) {
+      throw new NotFoundException(`Invalid ID format: ${id}`);
+    }
+    const result = await this.expenseModel
+      .findOneAndDelete({ _id: id, uid: userId })
       .exec();
-    if (!deletedExpense) {
+    if (!result) {
       throw new NotFoundException('Expense not found');
     }
-    return deletedExpense;
+    return result;
+  }
+
+  private isValidObjectId(id: string): boolean {
+    return /^[0-9a-fA-F]{24}$/.test(id);
   }
 }

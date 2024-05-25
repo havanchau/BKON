@@ -4,9 +4,8 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
-  ApiQuery,
 } from '@nestjs/swagger';
-import { ExpensesService } from './expenses.service';
+import { ReceivesService } from './receives.service';
 import {
   Controller,
   Get,
@@ -16,72 +15,73 @@ import {
   Body,
   Param,
   NotFoundException,
-  Query,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
-import { UpdateExpenseDto } from './dto/update-expense.dto';
-import { CreateExpenseDto } from './dto/create-expense.dto';
-import { FilterExpenseDto } from './dto/filter-expense.dto';
-import { Expense } from './expenses.schema';
+import { UpdateReceiveDto } from './dto/update-receive.dto';
+import { CreateReceiveDto } from './dto/create-receive.dto';
+import { Receive } from './receives.schema';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('expenses')
-@ApiTags('expenses')
+@Controller('receive')
+@ApiTags('receive')
 @UseGuards(AuthGuard('jwt'))
-export class ExpensesController {
-  constructor(private readonly expensesService: ExpensesService) {}
+export class ReceivesController {
+  constructor(private readonly receivesService: ReceivesService) {}
 
   @Post()
   @ApiCreatedResponse({
     description: 'Created Successfully',
-    type: Expense,
+    type: Receive,
     isArray: false,
   })
   @ApiBadRequestResponse({ description: 'Bad Request' })
   async create(
-    @Body() createExpenseDto: CreateExpenseDto,
+    @Body() createReceiveDto: CreateReceiveDto,
     @Request() req: any,
   ) {
-    return this.expensesService.create(createExpenseDto, req.user.userId);
+    return this.receivesService.create(createReceiveDto, req.user.userId);
   }
 
   @Get()
   @ApiOkResponse({
-    type: Expense,
+    type: Receive,
     isArray: true,
   })
-  @ApiQuery({ name: 'startDate', required: false, type: String })
-  @ApiQuery({ name: 'endDate', required: false, type: String })
   async findAll(
-    @Query() filterExpenseDto: FilterExpenseDto,
     @Request() req: any,
-  ): Promise<Expense[]> {
-    return await this.expensesService.findAll(
-      filterExpenseDto,
-      req.user.userId,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    const userId = req.user.userId;
+    const receives = await this.receivesService.findAll(
+      userId,
+      startDate && new Date(startDate),
+      endDate && new Date(endDate),
     );
+    return receives;
   }
 
   @Get(':id')
   @ApiOkResponse({
-    type: Expense,
+    type: Receive,
     isArray: false,
   })
   @ApiNotFoundResponse({
     description: 'Not Found',
   })
   async findOne(@Param('id') id: string, @Request() req: any) {
-    const expense = await this.expensesService.findById(id, req.user.userId);
-    if (!expense) {
-      throw new NotFoundException('Expense not found');
+    const receive = await this.receivesService.findById(id, req.user.userId);
+    if (!receive) {
+      throw new NotFoundException('Receive not found');
     }
-    return expense;
+    return receive;
   }
 
   @Put(':id')
   @ApiOkResponse({
-    type: Expense,
+    type: Receive,
     isArray: false,
   })
   @ApiNotFoundResponse({
@@ -90,10 +90,10 @@ export class ExpensesController {
   @ApiBadRequestResponse({ description: 'Bad Request' })
   async update(
     @Param('id') id: string,
-    @Body() updateExpenseDto: UpdateExpenseDto,
+    @Body() updateReceiveDto: UpdateReceiveDto,
     @Request() req: any,
   ) {
-    return this.expensesService.update(id, updateExpenseDto, req.user.userId);
+    return this.receivesService.update(id, updateReceiveDto, req.user.userId);
   }
 
   @Delete(':id')
@@ -104,6 +104,6 @@ export class ExpensesController {
     description: 'Not Found',
   })
   async delete(@Param('id') id: string, @Request() req: any) {
-    return this.expensesService.delete(id, req.user.userId);
+    return this.receivesService.delete(id, req.user.userId);
   }
 }

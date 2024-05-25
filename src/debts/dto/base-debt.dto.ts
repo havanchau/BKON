@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class BaseCashDto {
+export class BaseDebtDto {
   @ApiProperty({
     type: String,
     description: 'name',

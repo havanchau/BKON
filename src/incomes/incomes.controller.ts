@@ -17,26 +17,30 @@ import {
   Param,
   NotFoundException,
   Query,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UpdateIncomeDto } from './dto/update-income.dto';
 import { CreateIncomeDto } from './dto/create-income.dto';
 import { FilterIncomeDto } from './dto/filter-income.dto';
 import { Income } from './incomes.schema';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('incomes')
 @ApiTags('incomes')
+@UseGuards(AuthGuard('jwt'))
 export class IncomesController {
   constructor(private readonly incomesService: IncomesService) {}
 
   @Post()
   @ApiCreatedResponse({
-    description: 'Created Succesfully',
+    description: 'Created Successfully',
     type: Income,
     isArray: false,
   })
   @ApiBadRequestResponse({ description: 'Bad Request' })
-  async create(@Body() createIncomeDto: CreateIncomeDto) {
-    return this.incomesService.create(createIncomeDto);
+  async create(@Body() createIncomeDto: CreateIncomeDto, @Request() req: any) {
+    return this.incomesService.create(createIncomeDto, req.user.userId);
   }
 
   @Get()
@@ -44,11 +48,13 @@ export class IncomesController {
     type: Income,
     isArray: true,
   })
-  @ApiQuery({ name: 'uid', type: String })
   @ApiQuery({ name: 'startDate', required: false, type: String })
   @ApiQuery({ name: 'endDate', required: false, type: String })
-  async findAll(@Query() filterIncomeDto: FilterIncomeDto): Promise<Income[]> {
-    return await this.incomesService.findAll(filterIncomeDto);
+  async findAll(
+    @Query() filterIncomeDto: FilterIncomeDto,
+    @Request() req: any,
+  ): Promise<Income[]> {
+    return await this.incomesService.findAll(filterIncomeDto, req.user.userId);
   }
 
   @Get(':id')
@@ -59,8 +65,8 @@ export class IncomesController {
   @ApiNotFoundResponse({
     description: 'Not Found',
   })
-  async findOne(@Param('id') id: string) {
-    const income = await this.incomesService.findById(id);
+  async findOne(@Param('id') id: string, @Request() req: any) {
+    const income = await this.incomesService.findById(id, req.user.userId);
     if (!income) {
       throw new NotFoundException('Income not found');
     }
@@ -79,8 +85,9 @@ export class IncomesController {
   async update(
     @Param('id') id: string,
     @Body() updateIncomeDto: UpdateIncomeDto,
+    @Request() req: any,
   ) {
-    return this.incomesService.update(id, updateIncomeDto);
+    return this.incomesService.update(id, updateIncomeDto, req.user.userId);
   }
 
   @Delete(':id')
@@ -90,7 +97,7 @@ export class IncomesController {
   @ApiNotFoundResponse({
     description: 'Not Found',
   })
-  async delete(@Param('id') id: string) {
-    return this.incomesService.delete(id);
+  async delete(@Param('id') id: string, @Request() req: any) {
+    return this.incomesService.delete(id, req.user.userId);
   }
 }
