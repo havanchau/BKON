@@ -14,7 +14,7 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return this.userModel.find({}, { password: 0 }).exec() || [];
+    return (await this.userModel.find({}, { password: 0 }).exec()) || [];
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
