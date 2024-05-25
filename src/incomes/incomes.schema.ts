@@ -13,14 +13,14 @@ export class Income {
   uid: string;
 
   @Prop({ required: true })
+  @IsString()
+  @ApiProperty({ type: String, description: 'cashId' })
+  cashId: string;
+
+  @Prop({ required: true })
   @IsNumber()
   @ApiProperty({ type: Number, description: 'amount' })
   amount: number;
-
-  @Prop({ required: true })
-  @IsString()
-  @ApiProperty({ type: String, description: 'received_uid' })
-  received_uid: string;
 
   @Prop()
   @IsString()

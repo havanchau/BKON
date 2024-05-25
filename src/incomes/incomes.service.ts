@@ -5,19 +5,48 @@ import { Income } from './incomes.schema';
 import { CreateIncomeDto } from './dto/create-income.dto';
 import { UpdateIncomeDto } from './dto/update-income.dto';
 import { FilterIncomeDto } from './dto/filter-income.dto';
+import { Cash, CashDocument } from '@/../src/cashes/cashs.schema';
 
 @Injectable()
 export class IncomesService {
   constructor(
     @InjectModel(Income.name) private readonly incomeModel: Model<Income>,
+    @InjectModel(Cash.name) private readonly cashModel: Model<CashDocument>,
   ) {}
 
   async create(createIncomeDto: CreateIncomeDto): Promise<Income> {
-    const createdIncome = new this.incomeModel({
-      ...createIncomeDto,
-      createdAt: new Date(),
-    });
-    return createdIncome.save();
+    const session = await this.incomeModel.db.startSession();
+    session.startTransaction();
+
+    try {
+      const createdIncome = new this.incomeModel({
+        ...createIncomeDto,
+        createdAt: new Date(),
+        completeAt: new Date(),
+      });
+
+      const cash = await this.cashModel
+        .findOne({ _id: createIncomeDto.cashId })
+        .session(session);
+
+      if (!cash) {
+        throw new Error('Cash document not found');
+      }
+
+      cash.balance += createIncomeDto.amount;
+      await cash.save({ session });
+
+      await createdIncome.save({ session });
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return createdIncome;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
 
   async findAll(filterIncomeDto: FilterIncomeDto): Promise<Income[]> {

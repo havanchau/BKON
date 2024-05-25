@@ -1,15 +1,15 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class BaseCashDto {
   @ApiProperty({
     type: String,
-    description: 'account',
+    description: 'name',
   })
-  account: string;
+  name: string;
 
-  @ApiPropertyOptional({
-    type: String,
-    description: 'note',
+  @ApiProperty({
+    type: Number,
+    description: 'balance',
   })
-  note?: string;
+  balance: number;
 }

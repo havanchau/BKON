@@ -3,9 +3,27 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class BaseExpenseDto {
   @ApiProperty({
     type: String,
-    description: 'account',
+    description: 'uid',
   })
-  account: string;
+  uid: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'cashId',
+  })
+  cashId: string;
+
+  @ApiProperty({
+    type: Number,
+    description: 'amount',
+  })
+  amount: number;
+
+  @ApiProperty({
+    type: String,
+    description: 'spendOn',
+  })
+  spendOn: string;
 
   @ApiPropertyOptional({
     type: String,

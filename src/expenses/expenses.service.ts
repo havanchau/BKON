@@ -5,12 +5,14 @@ import { Model } from 'mongoose';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { FilterExpenseDto } from './dto/filter-expense.dto';
+import { Cash, CashDocument } from '@/../src/cashes/cashs.schema';
 
 @Injectable()
 export class ExpensesService {
   constructor(
     @InjectModel(Expense.name)
     private readonly expenseModel: Model<ExpenseDocument>,
+    @InjectModel(Cash.name) private readonly cashModel: Model<CashDocument>,
   ) {}
 
   async findAll(filterExpenseDto: FilterExpenseDto): Promise<Expense[]> {
@@ -36,11 +38,38 @@ export class ExpensesService {
   }
 
   async create(createExpenseDto: CreateExpenseDto): Promise<Expense> {
-    const createdExpense = new this.expenseModel({
-      ...createExpenseDto,
-      createdAt: new Date(),
-    });
-    return await createdExpense.save();
+    const session = await this.expenseModel.db.startSession();
+    session.startTransaction();
+
+    try {
+      const createdIncome = new this.expenseModel({
+        ...createExpenseDto,
+        createdAt: new Date(),
+        completeAt: new Date(),
+      });
+
+      const cash = await this.cashModel
+        .findOne({ _id: createExpenseDto.cashId })
+        .session(session);
+
+      if (!cash) {
+        throw new Error('Cash document not found');
+      }
+
+      cash.balance -= createExpenseDto.amount;
+      await cash.save({ session });
+
+      await createdIncome.save({ session });
+
+      await session.commitTransaction();
+      session.endSession();
+
+      return createdIncome;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
 
   async findById(id: string): Promise<Expense> {
