@@ -24,8 +24,8 @@ import { CreateReceiveDto } from './dto/create-receive.dto';
 import { Receive } from './receives.schema';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('receive')
-@ApiTags('receive')
+@Controller('receives')
+@ApiTags('receives')
 @UseGuards(AuthGuard('jwt'))
 export class ReceivesController {
   constructor(private readonly receivesService: ReceivesService) {}

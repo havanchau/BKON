@@ -6,7 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { Cash, CashDocument } from '../cashes/cashs.schema';
+import { Cash, CashDocument } from '../cashes/cashes.schema';
 
 @Injectable()
 export class UsersService {

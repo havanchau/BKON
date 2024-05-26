@@ -12,20 +12,23 @@ export class Debt {
   @ApiProperty({ type: String, description: 'uid' })
   uid: string;
 
+  @ApiProperty({ type: Date, description: 'borrowDate' })
   @Prop({ required: true })
-  @IsString()
-  @ApiProperty({ type: String, description: 'cashId' })
-  cashId: string;
+  borrowDate: Date;
+
+  @ApiProperty({ type: Date, description: 'repaidDate' })
+  @Prop({ required: true })
+  repaidDate: Date;
 
   @Prop({ required: true })
   @IsNumber()
   @ApiProperty({ type: Number, description: 'amount' })
   amount: number;
 
-  @Prop()
+  @Prop({ required: true })
   @IsString()
-  @ApiProperty({ type: String, description: 'spendOn' })
-  spendOn?: string;
+  @ApiProperty({ type: String, description: 'lenderName' })
+  lenderName?: string;
 
   @ApiProperty({ type: String, description: 'note' })
   @Prop()

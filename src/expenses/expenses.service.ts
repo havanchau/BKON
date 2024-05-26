@@ -5,7 +5,7 @@ import { Expense, ExpenseDocument } from './expenses.schema';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { FilterExpenseDto } from './dto/filter-expense.dto';
-import { Cash, CashDocument } from '../cashes/cashs.schema';
+import { Cash, CashDocument } from '../cashes/cashes.schema';
 
 @Injectable()
 export class ExpensesService {

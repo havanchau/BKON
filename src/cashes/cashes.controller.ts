@@ -4,8 +4,9 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
+  ApiQuery,
 } from '@nestjs/swagger';
-import { CashsService } from './cashs.service';
+import { CashesService } from './cashes.service';
 import {
   Controller,
   Get,
@@ -14,20 +15,20 @@ import {
   Delete,
   Body,
   Param,
-  NotFoundException,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { UpdateCashDto } from './dto/update-cash.dto';
 import { CreateCashDto } from './dto/create-cash.dto';
-import { Cash } from './cashs.schema';
+import { Cash } from './cashes.schema';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('cash')
-@ApiTags('cash')
+@Controller('cashes')
+@ApiTags('cashes')
 @UseGuards(AuthGuard('jwt'))
-export class CashsController {
-  constructor(private readonly cashsService: CashsService) {}
+export class CashesController {
+  constructor(private readonly cashesService: CashesService) {}
 
   @Post()
   @ApiCreatedResponse({
@@ -37,7 +38,7 @@ export class CashsController {
   })
   @ApiBadRequestResponse({ description: 'Bad Request' })
   async create(@Body() createCashDto: CreateCashDto, @Request() req: any) {
-    return this.cashsService.create(createCashDto, req.user.userId);
+    return this.cashesService.create(createCashDto, req.user.userId);
   }
 
   @Get()
@@ -46,7 +47,7 @@ export class CashsController {
     isArray: true,
   })
   async findAll(@Request() req: any) {
-    return await this.cashsService.findAll(req.user.userId);
+    return await this.cashesService.findAll(req.user.userId);
   }
 
   @Get(':id')
@@ -57,12 +58,24 @@ export class CashsController {
   @ApiNotFoundResponse({
     description: 'Not Found',
   })
-  async findOne(@Param('id') id: string, @Request() req: any) {
-    const cash = await this.cashsService.findById(id, req.user.userId);
-    if (!cash) {
-      throw new NotFoundException('Cash not found');
-    }
-    return cash;
+  @ApiQuery({ name: 'startDate', required: false, type: String })
+  @ApiQuery({ name: 'endDate', required: false, type: String })
+  @ApiQuery({ name: 'top', required: false, type: String })
+  async findOne(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+    @Query('top') top?: string,
+  ): Promise<any> {
+    const topNumber = top ? parseInt(top, 10) : 50;
+    return this.cashesService.findById(
+      id,
+      req.user.userId,
+      startDate,
+      endDate,
+      topNumber,
+    );
   }
 
   @Put(':id')
@@ -79,7 +92,7 @@ export class CashsController {
     @Body() updateCashDto: UpdateCashDto,
     @Request() req: any,
   ) {
-    return this.cashsService.update(id, updateCashDto, req.user.userId);
+    return this.cashesService.update(id, updateCashDto, req.user.userId);
   }
 
   @Delete(':id')
@@ -90,6 +103,6 @@ export class CashsController {
     description: 'Not Found',
   })
   async delete(@Param('id') id: string, @Request() req: any) {
-    return this.cashsService.delete(id, req.user.userId);
+    return this.cashesService.delete(id, req.user.userId);
   }
 }

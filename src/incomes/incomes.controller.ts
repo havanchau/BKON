@@ -54,7 +54,6 @@ export class IncomesController {
     @Query() filterIncomeDto: FilterIncomeDto,
     @Request() req: any,
   ): Promise<Income[]> {
-    console.log(req.user.userId, 'hellooooo');
     return await this.incomesService.findAll(filterIncomeDto, req.user.userId);
   }
 

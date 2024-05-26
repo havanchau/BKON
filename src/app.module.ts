@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { IncomesModule } from './incomes/incomes.module';
 import { ExpensesModule } from './expenses/expenses.module';
-import { CashsModule } from './cashes/cashs.module';
+import { CashsModule } from './cashes/cashes.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ReceivesModule } from './receives/receives.module';

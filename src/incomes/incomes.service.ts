@@ -5,7 +5,7 @@ import { Income, IncomeDocument } from './incomes.schema';
 import { CreateIncomeDto } from './dto/create-income.dto';
 import { UpdateIncomeDto } from './dto/update-income.dto';
 import { FilterIncomeDto } from './dto/filter-income.dto';
-import { Cash, CashDocument } from '../cashes/cashs.schema';
+import { Cash, CashDocument } from '../cashes/cashes.schema';
 
 @Injectable()
 export class IncomesService {

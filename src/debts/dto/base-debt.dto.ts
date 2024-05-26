@@ -3,13 +3,37 @@ import { ApiProperty } from '@nestjs/swagger';
 export class BaseDebtDto {
   @ApiProperty({
     type: String,
-    description: 'name',
+    description: 'uid',
   })
-  name: string;
+  uid: string;
+
+  @ApiProperty({
+    type: Date,
+    description: 'borrowDate',
+  })
+  borrowDate: Date;
+
+  @ApiProperty({
+    type: Date,
+    description: 'repaidDate',
+  })
+  repaidDate: Date;
 
   @ApiProperty({
     type: Number,
-    description: 'balance',
+    description: 'amount',
   })
-  balance: number;
+  amount: number;
+
+  @ApiProperty({
+    type: String,
+    description: 'lenderName',
+  })
+  lenderName?: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'note',
+  })
+  note?: string;
 }
