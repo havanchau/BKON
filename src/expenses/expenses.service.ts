@@ -25,7 +25,6 @@ export class ExpensesService {
     try {
       const createdExpense = new this.expenseModel({
         ...createExpenseDto,
-        createdAt: new Date(),
         completeAt: new Date(),
         uid: userId,
       });

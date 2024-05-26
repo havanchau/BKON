@@ -3,12 +3,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class BaseIncomeDto {
   @ApiProperty({
     type: String,
-    description: 'uid',
-  })
-  uid: string;
-
-  @ApiProperty({
-    type: String,
     description: 'cashId',
   })
   cashId: string;
@@ -24,6 +18,12 @@ export class BaseIncomeDto {
     description: 'spendOn',
   })
   spendOn: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'createdAt',
+  })
+  createdAt: string;
 
   @ApiPropertyOptional({
     type: String,
