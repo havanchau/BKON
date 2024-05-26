@@ -15,7 +15,7 @@ export class Cash {
   @Prop({ required: true })
   @IsString()
   @ApiProperty({ type: String, description: 'name' })
-  account: string;
+  name: string;
 
   @ApiProperty({ type: Number, description: 'balance' })
   @Prop()
