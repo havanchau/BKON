@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class BaseReceiveDto {
+export class BaseReceivableDto {
   @ApiProperty({
     type: Date,
     description: 'borrowDate',

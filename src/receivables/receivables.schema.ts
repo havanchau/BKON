@@ -3,10 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 import { HydratedDocument } from 'mongoose';
 
-export type ReceiveDocument = HydratedDocument<Receive>;
+export type ReceivableDocument = HydratedDocument<Receivable>;
 
 @Schema()
-export class Receive {
+export class Receivable {
   @Prop({ required: true })
   @IsString()
   @ApiProperty({ type: String, description: 'uid' })
@@ -44,4 +44,4 @@ export class Receive {
   completeAt?: Date;
 }
 
-export const ReceiveSchema = SchemaFactory.createForClass(Receive);
+export const ReceivableSchema = SchemaFactory.createForClass(Receivable);

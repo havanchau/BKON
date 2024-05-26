@@ -5,7 +5,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ReceivesService } from './receives.service';
+import { ReceivablesService } from './receivables.service';
 import {
   Controller,
   Get,
@@ -19,34 +19,34 @@ import {
   Request,
   Query,
 } from '@nestjs/common';
-import { UpdateReceiveDto } from './dto/update-receive.dto';
-import { CreateReceiveDto } from './dto/create-receive.dto';
-import { Receive } from './receives.schema';
+import { UpdateReceivableDto } from './dto/update-receivables.dto';
+import { CreateReceivableDto } from './dto/create-receivable.dto';
+import { Receivable } from './receivables.schema';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('receives')
-@ApiTags('receives')
+@Controller('receivables')
+@ApiTags('receivables')
 @UseGuards(AuthGuard('jwt'))
-export class ReceivesController {
-  constructor(private readonly receivesService: ReceivesService) {}
+export class ReceivablesController {
+  constructor(private readonly receivablesService: ReceivablesService) {}
 
   @Post()
   @ApiCreatedResponse({
     description: 'Created Successfully',
-    type: Receive,
+    type: Receivable,
     isArray: false,
   })
   @ApiBadRequestResponse({ description: 'Bad Request' })
   async create(
-    @Body() createReceiveDto: CreateReceiveDto,
+    @Body() createReceivableDto: CreateReceivableDto,
     @Request() req: any,
   ) {
-    return this.receivesService.create(createReceiveDto, req.user.userId);
+    return this.receivablesService.create(createReceivableDto, req.user.userId);
   }
 
   @Get()
   @ApiOkResponse({
-    type: Receive,
+    type: Receivable,
     isArray: true,
   })
   async findAll(
@@ -55,33 +55,36 @@ export class ReceivesController {
     @Query('endDate') endDate?: string,
   ) {
     const userId = req.user.userId;
-    const receives = await this.receivesService.findAll(
+    const receivables = await this.receivablesService.findAll(
       userId,
       startDate && new Date(startDate),
       endDate && new Date(endDate),
     );
-    return receives;
+    return receivables;
   }
 
   @Get(':id')
   @ApiOkResponse({
-    type: Receive,
+    type: Receivable,
     isArray: false,
   })
   @ApiNotFoundResponse({
     description: 'Not Found',
   })
   async findOne(@Param('id') id: string, @Request() req: any) {
-    const receive = await this.receivesService.findById(id, req.user.userId);
-    if (!receive) {
-      throw new NotFoundException('Receive not found');
+    const receivable = await this.receivablesService.findById(
+      id,
+      req.user.userId,
+    );
+    if (!receivable) {
+      throw new NotFoundException('Receivable not found');
     }
-    return receive;
+    return receivable;
   }
 
   @Put(':id')
   @ApiOkResponse({
-    type: Receive,
+    type: Receivable,
     isArray: false,
   })
   @ApiNotFoundResponse({
@@ -90,10 +93,14 @@ export class ReceivesController {
   @ApiBadRequestResponse({ description: 'Bad Request' })
   async update(
     @Param('id') id: string,
-    @Body() updateReceiveDto: UpdateReceiveDto,
+    @Body() updateReceivableDto: UpdateReceivableDto,
     @Request() req: any,
   ) {
-    return this.receivesService.update(id, updateReceiveDto, req.user.userId);
+    return this.receivablesService.update(
+      id,
+      updateReceivableDto,
+      req.user.userId,
+    );
   }
 
   @Delete(':id')
@@ -104,6 +111,6 @@ export class ReceivesController {
     description: 'Not Found',
   })
   async delete(@Param('id') id: string, @Request() req: any) {
-    return this.receivesService.delete(id, req.user.userId);
+    return this.receivablesService.delete(id, req.user.userId);
   }
 }

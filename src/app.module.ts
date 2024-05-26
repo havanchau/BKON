@@ -8,7 +8,7 @@ import { ExpensesModule } from './expenses/expenses.module';
 import { CashesModule } from './cashes/cashes.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { ReceivesModule } from './receives/receives.module';
+import { ReceivablesModule } from './receivables/receivables.module';
 import { DebtsModule } from './debts/debts.module';
 
 @Module({
@@ -22,7 +22,7 @@ import { DebtsModule } from './debts/debts.module';
     ExpensesModule,
     CashesModule,
     AuthModule,
-    ReceivesModule,
+    ReceivablesModule,
     DebtsModule,
   ],
   controllers: [AppController],
