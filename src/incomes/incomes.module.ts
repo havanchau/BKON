@@ -3,12 +3,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Income, IncomeSchema } from './incomes.schema';
 import { IncomesController } from './incomes.controller';
 import { IncomesService } from './incomes.service';
-import { CashsModule } from '@/../src/cashes/cashs.module';
+import { CashesModule } from '@/../src/cashes/cashes.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Income.name, schema: IncomeSchema }]),
-    CashsModule,
+    CashesModule,
   ],
   controllers: [IncomesController],
   providers: [IncomesService],
