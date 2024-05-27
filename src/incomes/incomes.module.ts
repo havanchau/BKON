@@ -12,5 +12,6 @@ import { CashesModule } from '@/../src/cashes/cashes.module';
   ],
   controllers: [IncomesController],
   providers: [IncomesService],
+  exports: [IncomesService, MongooseModule],
 })
 export class IncomesModule {}

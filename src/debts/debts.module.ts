@@ -10,6 +10,6 @@ import { DebtsService } from './debts.service';
   ],
   controllers: [DebtsController],
   providers: [DebtsService],
-  exports: [MongooseModule],
+  exports: [DebtsService, MongooseModule],
 })
 export class DebtsModule {}

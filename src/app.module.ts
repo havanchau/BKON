@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ReceivablesModule } from './receivables/receivables.module';
 import { DebtsModule } from './debts/debts.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { DebtsModule } from './debts/debts.module';
     AuthModule,
     ReceivablesModule,
     DebtsModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

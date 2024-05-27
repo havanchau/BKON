@@ -30,6 +30,13 @@ import { AuthGuard } from '@nestjs/passport';
 export class DebtsController {
   constructor(private readonly debtsService: DebtsService) {}
 
+  // @Get('weekly-spending')
+  // async getWeeklySpendingReport(@Request() req: any) {
+  //   const userId = req.user.userId;
+  //   const report = await this.debtsService.getWeeklySpending(userId);
+  //   return { weeklySpending: report };
+  // }
+
   @Post()
   @ApiCreatedResponse({
     description: 'Created Successfully',

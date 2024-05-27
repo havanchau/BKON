@@ -15,5 +15,6 @@ import { ReceivablesService } from './receivables.service';
   ],
   controllers: [ReceivablesController],
   providers: [ReceivablesService],
+  exports: [ReceivablesService, MongooseModule],
 })
 export class ReceivablesModule {}
