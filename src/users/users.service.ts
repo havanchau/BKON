@@ -34,10 +34,10 @@ export class UsersService {
       await createdUser.save({ session });
 
       const defaultCash = new this.cashModel({
-        account: 'Default',
+        name: 'Default',
         balance: 0,
         createdAt: new Date(),
-        uid: createdUser._id, // Assuming you need to link Cash to User
+        uid: createdUser._id,
       });
 
       await defaultCash.save({ session });
