@@ -24,4 +24,10 @@ export class BaseUserDto {
     description: 'password',
   })
   password: string;
+
+  @ApiProperty({
+    type: Number,
+    description: 'budget',
+  })
+  budget: number;
 }

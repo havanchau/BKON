@@ -25,7 +25,7 @@ export class IncomesService {
     try {
       const createdIncome = new this.incomeModel({
         ...createIncomeDto,
-        completeAt: new Date(),
+        createdAt: new Date(),
         uid: userId,
       });
 

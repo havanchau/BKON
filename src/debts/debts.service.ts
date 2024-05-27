@@ -11,59 +11,6 @@ export class DebtsService {
     @InjectModel(Debt.name) private readonly debtModel: Model<DebtDocument>,
   ) {}
 
-  // async getWeeklySpending(userId: string): Promise<any> {
-  //   const debts = await this.debtModel.find({ uid: userId }).exec();
-
-  //   if (!debts.length) {
-  //     return [];
-  //   }
-
-  //   // Group debts by week and calculate the total amount for each week
-  //   const weeklySpending = debts.reduce((acc, debt) => {
-  //     const weekKey = this.getWeekKey(new Date(debt.createdAt));
-  //     if (!acc[weekKey]) {
-  //       acc[weekKey] = {
-  //         startDate: this.getStartDateOfWeek(new Date(debt.createdAt)),
-  //         endDate: this.getEndDateOfWeek(new Date(debt.createdAt)),
-  //         amount: 0,
-  //       };
-  //     }
-  //     acc[weekKey].amount += debt.amount;
-  //     return acc;
-  //   }, {});
-
-  //   return Object.values(weeklySpending);
-  // }
-
-  // private getWeekKey(date: Date): string {
-  //   const year = date.getFullYear();
-  //   const weekNumber = this.getWeekNumber(date);
-  //   return `${year}-W${weekNumber}`;
-  // }
-
-  // private getWeekNumber(date: Date): number {
-  //   const startOfYear = new Date(date.getFullYear(), 0, 1);
-  //   const pastDaysOfYear = (date.getTime() - startOfYear.getTime()) / 86400000;
-  //   return Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
-  // }
-
-  // private getStartDateOfWeek(date: Date): Date {
-  //   const day = date.getDay();
-  //   const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-  //   const startDate = new Date(date);
-  //   startDate.setDate(diff);
-  //   startDate.setHours(0, 0, 0, 0);
-  //   return startDate;
-  // }
-
-  // private getEndDateOfWeek(date: Date): Date {
-  //   const start = this.getStartDateOfWeek(date);
-  //   const endDate = new Date(start);
-  //   endDate.setDate(start.getDate() + 6);
-  //   endDate.setHours(23, 59, 59, 999);
-  //   return endDate;
-  // }
-
   async create(createDebtDto: CreateDebtDto, userId: string): Promise<Debt> {
     const createdDebt = new this.debtModel({
       ...createDebtDto,

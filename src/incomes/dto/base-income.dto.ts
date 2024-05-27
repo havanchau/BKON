@@ -20,6 +20,12 @@ export class BaseIncomeDto {
   spendOn: string;
 
   @ApiProperty({
+    type: Date,
+    description: 'tradedDate',
+  })
+  tradedDate: Date;
+
+  @ApiProperty({
     type: String,
     description: 'createdAt',
   })
