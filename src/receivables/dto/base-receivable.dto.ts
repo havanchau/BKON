@@ -23,7 +23,7 @@ export class BaseReceivableDto {
     type: String,
     description: 'lenderName',
   })
-  lenderName?: string;
+  lenderName: string;
 
   @ApiProperty({
     type: String,

@@ -28,7 +28,7 @@ export class Debt {
   @Prop({ required: true })
   @IsString()
   @ApiProperty({ type: String, description: 'lenderName' })
-  lenderName?: string;
+  lenderName: string;
 
   @ApiProperty({ type: String, description: 'note' })
   @Prop()
