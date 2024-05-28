@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsDate, IsDateString } from 'class-validator';
+import { IsString, IsNumber, IsDate } from 'class-validator';
 import { HydratedDocument } from 'mongoose';
 
 export type ExpenseDocument = HydratedDocument<Expense>;
@@ -28,7 +28,7 @@ export class Expense {
   spendOn: string;
 
   @Prop({ required: true })
-  @IsDateString()
+  @IsDate()
   @ApiProperty({ type: Date, description: 'tradedDate' })
   tradedDate: Date;
 
