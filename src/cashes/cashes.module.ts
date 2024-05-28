@@ -33,8 +33,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CashesService } from './cashes.service';
 import { CashesController } from './cashes.controller';
 import { Cash, CashSchema } from './cashes.schema';
-import { Income, IncomeSchema } from '@/../src/incomes/incomes.schema';
-import { Expense, ExpenseSchema } from '@/../src/expenses/expenses.schema';
+import { Income, IncomeSchema } from '../incomes/incomes.schema';
+import { Expense, ExpenseSchema } from '../expenses/expenses.schema';
 
 @Module({
   imports: [

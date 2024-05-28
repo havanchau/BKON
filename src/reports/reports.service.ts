@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Income, IncomeDocument } from '@/../src/incomes/incomes.schema';
-import { Expense, ExpenseDocument } from '@/../src/expenses/expenses.schema';
-import { Debt, DebtDocument } from '@/../src/debts/debts.schema';
+import { Income, IncomeDocument } from '../incomes/incomes.schema';
+import { Expense, ExpenseDocument } from '../expenses/expenses.schema';
+import { Debt, DebtDocument } from '../debts/debts.schema';
 import {
   Receivable,
   ReceivableDocument,
-} from '@/../src/receivables/receivables.schema';
+} from '../receivables/receivables.schema';
 
 @Injectable()
 export class ReportsService {

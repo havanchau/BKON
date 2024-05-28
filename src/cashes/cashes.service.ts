@@ -61,8 +61,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Cash, CashDocument } from './cashes.schema';
-import { Income, IncomeDocument } from '@/../src/incomes/incomes.schema';
-import { Expense, ExpenseDocument } from '@/../src/expenses/expenses.schema';
+import { Income, IncomeDocument } from '../incomes/incomes.schema';
+import { Expense, ExpenseDocument } from '../expenses/expenses.schema';
 import { CreateCashDto } from './dto/create-cash.dto';
 import { UpdateCashDto } from './dto/update-cash.dto';
 

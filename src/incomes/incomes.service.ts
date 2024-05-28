@@ -30,16 +30,15 @@ export class IncomesService {
         uid: userId,
       });
 
-      const cash = await this.cashModel
-        .findOne({ _id: createIncomeDto.cashId, uid: userId })
-        .session(session);
-
+      const cash = await this.cashModel.findOneAndUpdate(
+        { _id: createIncomeDto.cashId, uid: userId },
+        { $inc: { balance: +createIncomeDto.amount } },
+        { new: true }
+      ).session(session);
+      
       if (!cash) {
         throw new Error('Cash document not found');
       }
-
-      cash.balance += createIncomeDto.amount;
-      await cash.save({ session });
 
       await createdIncome.save({ session });
 

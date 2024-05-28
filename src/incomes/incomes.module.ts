@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Income, IncomeSchema } from './incomes.schema';
 import { IncomesController } from './incomes.controller';
 import { IncomesService } from './incomes.service';
-import { CashesModule } from '@/../src/cashes/cashes.module';
+import { CashesModule } from '../cashes/cashes.module';
 
 @Module({
   imports: [
