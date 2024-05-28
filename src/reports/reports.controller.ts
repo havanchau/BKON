@@ -2,8 +2,12 @@ import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { Request } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { AuthGuard } from '@nestjs/passport';
+import {
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('report')
+@ApiTags('report')
 @UseGuards(AuthGuard('jwt'))
 export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
