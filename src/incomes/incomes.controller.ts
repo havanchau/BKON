@@ -25,12 +25,19 @@ import { CreateIncomeDto } from './dto/create-income.dto';
 import { FilterIncomeDto } from './dto/filter-income.dto';
 import { Income } from './incomes.schema';
 import { AuthGuard } from '@nestjs/passport';
+import { AmountBySpendOnDto } from './dto/amount-by-spend-on.dto';
 
 @Controller('incomes')
 @ApiTags('incomes')
 @UseGuards(AuthGuard('jwt'))
 export class IncomesController {
   constructor(private readonly incomesService: IncomesService) {}
+
+  @Get('stats/amount')
+  @ApiOkResponse({ type: [AmountBySpendOnDto] })
+  async getAmountBySpendOn(@Request() req: any): Promise<AmountBySpendOnDto[]> {
+    return this.incomesService.getAmountBySpendOn(req.user.userId);
+  }
 
   @Post()
   @ApiCreatedResponse({

@@ -110,6 +110,29 @@ export class IncomesService {
     return result;
   }
 
+  async getAmountBySpendOn(userId: string): Promise<any> {
+    return this.incomeModel.aggregate([
+      {
+        $match: {
+          uid: userId,
+        },
+      },
+      {
+        $group: {
+          _id: '$spendOn',
+          totalAmount: { $sum: '$amount' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          spendOn: '$_id',
+          totalAmount: 1,
+        },
+      },
+    ]);
+  }
+
   private isValidObjectId(id: string): boolean {
     return /^[0-9a-fA-F]{24}$/.test(id);
   }
