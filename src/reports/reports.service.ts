@@ -44,10 +44,20 @@ export class ReportsService {
     const model = this.getModel(modelName);
     const query: any = { uid: userId };
     if (startDate) {
-      query.createdAt = { $gte: startDate };
+      if (query.tradedDate) {
+        query.tradedDate = { $gte: startDate };
+      }
+      else {
+        query.createdAt = { $gte: startDate };
+      }
     }
     if (endDate) {
-      query.createdAt = { ...query.createdAt, $lte: endDate };
+      if (query.tradedDate) {
+        query.tradedDate = { ...query.tradedDate, $lte: endDate };
+      }
+      else {
+        query.createdAt = { ...query.createdAt, $lte: endDate };
+      }
     }
     const items = await model.find(query).exec();
 

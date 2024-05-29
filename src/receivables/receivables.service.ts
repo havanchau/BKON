@@ -28,6 +28,7 @@ export class ReceivablesService {
     userId: string,
     startDate?: Date,
     endDate?: Date,
+    minAmount?: number,
   ): Promise<Receivable[]> {
     const query: any = { uid: userId };
 
@@ -37,6 +38,10 @@ export class ReceivablesService {
       query.createdAt = { $gte: startDate };
     } else if (endDate) {
       query.createdAt = { $lte: endDate };
+    }
+
+    if (minAmount) {
+      query.amount = { $gte: minAmount };
     }
 
     return this.receivableModel.find(query).exec();
