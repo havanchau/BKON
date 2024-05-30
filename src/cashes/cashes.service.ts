@@ -94,7 +94,7 @@ export class CashesService {
     userId: string,
     startDate?: string,
     endDate?: string,
-    top: number = 50,
+    top: number = 10,
   ): Promise<any> {
     const cash = await this.cashModel.findOne({ _id: id, uid: userId }).exec();
     if (!cash) {
@@ -114,6 +114,8 @@ export class CashesService {
 
     const expenses = await this.expenseModel.find(query).limit(top).exec();
     const incomes = await this.incomeModel.find(query).limit(top).exec();
+
+    console.log(expenses.length, incomes.length, top);
 
     return {
       _id: cash._id,
