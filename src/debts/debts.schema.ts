@@ -26,6 +26,11 @@ export class Debt {
   amount: number;
 
   @Prop({ required: true })
+  @IsNumber()
+  @ApiProperty({ type: Number, description: 'paid' })
+  paid: number;
+
+  @Prop({ required: true })
   @IsString()
   @ApiProperty({ type: String, description: 'lenderName' })
   lenderName: string;

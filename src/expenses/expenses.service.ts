@@ -58,15 +58,19 @@ export class ExpensesService {
     filterExpenseDto: FilterExpenseDto,
     userId: string,
   ): Promise<Expense[]> {
-    const { startDate, endDate } = filterExpenseDto;
+    const { startDate, endDate, minAmount } = filterExpenseDto;
     const query: any = { uid: userId };
 
     if (startDate) {
-      query.date = { ...query.date, $gte: new Date(startDate) };
+      query.tradedDate = { ...query.tradedDate, $gte: new Date(startDate) };
     }
 
     if (endDate) {
-      query.date = { ...query.date, $lte: new Date(endDate) };
+      query.tradedDate = { ...query.tradedDate, $lte: new Date(endDate) };
+    }
+
+    if (minAmount) {
+      query.amount = { ...query.amount, $gte: minAmount };
     }
 
     return this.expenseModel.find(query).exec();

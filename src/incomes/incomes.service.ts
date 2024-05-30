@@ -57,15 +57,19 @@ export class IncomesService {
     filterIncomeDto: FilterIncomeDto,
     userId: string,
   ): Promise<Income[]> {
-    const { startDate, endDate } = filterIncomeDto;
+    const { startDate, endDate, minAmount } = filterIncomeDto;
     const query: any = { uid: userId };
 
     if (startDate) {
-      query.date = { ...query.date, $gte: new Date(startDate) };
+      query.tradedDate = { ...query.tradedDate, $gte: new Date(startDate) };
     }
 
     if (endDate) {
-      query.date = { ...query.date, $lte: new Date(endDate) };
+      query.tradedDate = { ...query.tradedDate, $lte: new Date(endDate) };
+    }
+
+    if (minAmount) {
+      query.amount = { ...query.amount, $gte: minAmount };
     }
 
     return this.incomeModel.find(query).exec();

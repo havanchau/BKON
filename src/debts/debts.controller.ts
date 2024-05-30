@@ -4,6 +4,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { DebtsService } from './debts.service';
 import {
@@ -21,6 +22,7 @@ import {
 } from '@nestjs/common';
 import { UpdateDebtDto } from './dto/update-debt.dto';
 import { CreateDebtDto } from './dto/create-debt.dto';
+import { FilterDebtDto } from './dto/filter-debt.dto';
 import { Debt } from './debts.schema';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -46,16 +48,17 @@ export class DebtsController {
     type: Debt,
     isArray: true,
   })
+  @ApiQuery({ name: 'startDate', required: false, type: String })
+  @ApiQuery({ name: 'endDate', required: false, type: String })
+  @ApiQuery({ name: 'minAmount', required: false, type: String })
   async findAll(
+    @Query() filterDebtDto: FilterDebtDto,
     @Request() req: any,
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
   ) {
     const userId = req.user.userId;
     const debts = await this.debtsService.findAll(
+      filterDebtDto,
       userId,
-      startDate && new Date(startDate),
-      endDate && new Date(endDate),
     );
     return debts;
   }

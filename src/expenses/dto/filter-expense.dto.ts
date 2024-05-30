@@ -1,4 +1,4 @@
-import { IsOptional, IsDateString } from 'class-validator';
+import { IsOptional, IsDateString, IsNumberString } from 'class-validator';
 
 export class FilterExpenseDto {
   @IsOptional()
@@ -8,4 +8,8 @@ export class FilterExpenseDto {
   @IsOptional()
   @IsDateString()
   endDate?: string;
+
+  @IsOptional()
+  @IsNumberString()
+  minAmount?: string;
 }
