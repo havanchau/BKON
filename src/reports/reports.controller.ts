@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { Request } from '@nestjs/common';
 import { ReportsService } from './reports.service';

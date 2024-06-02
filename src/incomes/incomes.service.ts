@@ -1,11 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Income, IncomeDocument } from './incomes.schema';
-import { CreateIncomeDto } from './dto/create-income.dto';
-import { UpdateIncomeDto } from './dto/update-income.dto';
-import { FilterIncomeDto } from './dto/filter-income.dto';
-import { Cash, CashDocument } from '../cashes/cashes.schema';
+/* eslint-disable prettier/prettier */
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { Income, IncomeDocument } from "./incomes.schema";
+import { CreateIncomeDto } from "./dto/create-income.dto";
+import { UpdateIncomeDto } from "./dto/update-income.dto";
+import { FilterIncomeDto } from "./dto/filter-income.dto";
+import { Cash, CashDocument } from "../cashes/cashes.schema";
 
 @Injectable()
 export class IncomesService {
@@ -30,14 +31,16 @@ export class IncomesService {
         uid: userId,
       });
 
-      const cash = await this.cashModel.findOneAndUpdate(
-        { _id: createIncomeDto.cashId, uid: userId },
-        { $inc: { balance: +createIncomeDto.amount } },
-        { new: true }
-      ).session(session);
-      
+      const cash = await this.cashModel
+        .findOneAndUpdate(
+          { _id: createIncomeDto.cashId, uid: userId },
+          { $inc: { balance: +createIncomeDto.amount } },
+          { new: true },
+        )
+        .session(session);
+
       if (!cash) {
-        throw new Error('Cash document not found');
+        throw new Error("Cash document not found");
       }
 
       await createdIncome.save({ session });
@@ -57,15 +60,19 @@ export class IncomesService {
     filterIncomeDto: FilterIncomeDto,
     userId: string,
   ): Promise<Income[]> {
-    const { startDate, endDate } = filterIncomeDto;
+    const { startDate, endDate, minAmount } = filterIncomeDto;
     const query: any = { uid: userId };
 
     if (startDate) {
-      query.date = { ...query.date, $gte: new Date(startDate) };
+      query.tradedDate = { $gte: new Date(startDate) };
     }
 
     if (endDate) {
-      query.date = { ...query.date, $lte: new Date(endDate) };
+      query.tradedDate = { $lte: new Date(endDate) };
+    }
+
+    if (minAmount) {
+      query.amount = { $gte: minAmount };
     }
 
     return this.incomeModel.find(query).exec();
@@ -92,7 +99,7 @@ export class IncomesService {
       })
       .exec();
     if (!updatedIncome) {
-      throw new NotFoundException('Income not found');
+      throw new NotFoundException("Income not found");
     }
     return updatedIncome;
   }
@@ -105,7 +112,7 @@ export class IncomesService {
       .findOneAndDelete({ _id: id, uid: userId })
       .exec();
     if (!result) {
-      throw new NotFoundException('Income not found');
+      throw new NotFoundException("Income not found");
     }
     return result;
   }
@@ -119,14 +126,14 @@ export class IncomesService {
       },
       {
         $group: {
-          _id: '$spendOn',
-          totalAmount: { $sum: '$amount' },
+          _id: "$spendOn",
+          totalAmount: { $sum: "$amount" },
         },
       },
       {
         $project: {
           _id: 0,
-          spendOn: '$_id',
+          spendOn: "$_id",
           totalAmount: 1,
         },
       },

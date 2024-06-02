@@ -1,4 +1,4 @@
-import { IsOptional, IsDateString } from 'class-validator';
+import { IsOptional, IsDateString, IsNumber } from 'class-validator';
 
 export class FilterIncomeDto {
   @IsOptional()
@@ -8,4 +8,8 @@ export class FilterIncomeDto {
   @IsOptional()
   @IsDateString()
   endDate?: string;
+
+  @IsOptional()
+  @IsNumber()
+  minAmount?: number;
 }

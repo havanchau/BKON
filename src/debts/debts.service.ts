@@ -9,7 +9,7 @@ import { UpdateDebtDto } from './dto/update-debt.dto';
 export class DebtsService {
   constructor(
     @InjectModel(Debt.name) private readonly debtModel: Model<DebtDocument>,
-  ) {}
+  ) { }
 
   async create(createDebtDto: CreateDebtDto, userId: string): Promise<Debt> {
     const createdDebt = new this.debtModel({
@@ -24,15 +24,20 @@ export class DebtsService {
     userId: string,
     startDate?: Date,
     endDate?: Date,
+    minAmount?: number,
   ): Promise<Debt[]> {
     const query: any = { uid: userId };
 
-    if (startDate && endDate) {
-      query.createdAt = { $gte: startDate, $lte: endDate };
-    } else if (startDate) {
-      query.createdAt = { $gte: startDate };
-    } else if (endDate) {
-      query.createdAt = { $lte: endDate };
+    if (startDate) {
+      query.borrowDate = { $gte: startDate };
+    }
+    
+    if (endDate) {
+      query.borrowDate = { $lte: endDate };
+    }
+
+    if (minAmount) {
+      query.amount = { $gte: minAmount };
     }
 
     return this.debtModel.find(query).exec();

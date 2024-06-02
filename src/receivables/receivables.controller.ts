@@ -4,6 +4,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { ReceivablesService } from './receivables.service';
 import {
@@ -49,11 +50,14 @@ export class ReceivablesController {
     type: Receivable,
     isArray: true,
   })
+  @ApiQuery({ name: 'startDate', required: false, type: String })
+  @ApiQuery({ name: 'endDate', required: false, type: String })
+  @ApiQuery({ name: 'minAmount', required: false, type: Number })
   async findAll(
+    @Query('startDate') startDate?: Date,
+    @Query('endDate') endDate?: Date,
+    @Query('minAmount') minAmount?: Number,
     @Request() req: any,
-    @Query('startDate') startDate?: string,
-    @Query('endDate') endDate?: string,
-    @Query('minAmount') minAmount?: number,
   ) {
     const userId = req.user.userId;
     const receivables = await this.receivablesService.findAll(

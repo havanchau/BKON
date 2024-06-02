@@ -50,12 +50,14 @@ export class DebtsController {
     @Request() req: any,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
+    @Query('minAmount') minAmount?: number,
   ) {
     const userId = req.user.userId;
     const debts = await this.debtsService.findAll(
       userId,
       startDate && new Date(startDate),
       endDate && new Date(endDate),
+      minAmount,
     );
     return debts;
   }

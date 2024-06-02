@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -60,6 +61,7 @@ export class ExpensesController {
   })
   @ApiQuery({ name: 'startDate', required: false, type: String })
   @ApiQuery({ name: 'endDate', required: false, type: String })
+  @ApiQuery({ name: 'minAmount', required: false, type: Number })
   async findAll(
     @Query() filterExpenseDto: FilterExpenseDto,
     @Request() req: any,

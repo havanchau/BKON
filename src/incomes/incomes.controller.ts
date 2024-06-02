@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -57,6 +58,7 @@ export class IncomesController {
   })
   @ApiQuery({ name: 'startDate', required: false, type: String })
   @ApiQuery({ name: 'endDate', required: false, type: String })
+  @ApiQuery({ name: 'minAmount', required: false, type: Number })
   async findAll(
     @Query() filterIncomeDto: FilterIncomeDto,
     @Request() req: any,
