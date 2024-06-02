@@ -64,15 +64,15 @@ export class IncomesService {
     const query: any = { uid: userId };
 
     if (startDate) {
-      query.tradedDate = { $gte: new Date(startDate) };
+      query.tradedDate = { ...query.tradedDate, $gte: new Date(startDate) };
     }
 
     if (endDate) {
-      query.tradedDate = { $lte: new Date(endDate) };
+      query.tradedDate = { ...query.tradedDate, $lte: new Date(endDate) };
     }
 
     if (minAmount) {
-      query.amount = { $gte: minAmount };
+      query.amount = { ...query.amount, $gte: minAmount };
     }
 
     return this.incomeModel.find(query).exec();

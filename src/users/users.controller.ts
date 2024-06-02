@@ -4,6 +4,7 @@ import {
   ApiNotFoundResponse,
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import {
@@ -15,6 +16,7 @@ import {
   Body,
   Param,
   NotFoundException,
+  Query,
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -43,6 +45,18 @@ export class UsersController {
   @ApiBadRequestResponse({ description: 'Bad Request' })
   async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @Get('check-unique')
+  @ApiQuery({ name: 'email', type: String, required: true, description: 'The email to check uniqueness' })
+  @ApiQuery({ name: 'username', type: String, required: true, description: 'The username to check uniqueness' })
+  async checkUnique(
+    @Query('email') email: string,
+    @Query('username') username: string,
+  ) {
+    const isUnique = await this.usersService.checkUnique(email, username);
+
+    return { unique: isUnique };
   }
 
   @Get(':id')

@@ -61,7 +61,7 @@ export class ExpensesController {
   })
   @ApiQuery({ name: 'startDate', required: false, type: String })
   @ApiQuery({ name: 'endDate', required: false, type: String })
-  @ApiQuery({ name: 'minAmount', required: false, type: Number })
+  @ApiQuery({ name: 'minAmount', required: false, type: String })
   async findAll(
     @Query() filterExpenseDto: FilterExpenseDto,
     @Request() req: any,

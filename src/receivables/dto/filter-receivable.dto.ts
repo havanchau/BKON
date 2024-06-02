@@ -1,6 +1,6 @@
 import { IsOptional, IsDateString, IsNumberString } from 'class-validator';
 
-export class FilterIncomeDto {
+export class FilterReceivableDto {
   @IsOptional()
   @IsDateString()
   startDate?: string;

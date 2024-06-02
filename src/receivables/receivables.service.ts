@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Receivable, ReceivableDocument } from './receivables.schema';
 import { CreateReceivableDto } from './dto/create-receivable.dto';
 import { UpdateReceivableDto } from './dto/update-receivables.dto';
+import { FilterReceivableDto } from './dto/filter-receivable.dto';
 
 @Injectable()
 export class ReceivablesService {
@@ -25,11 +26,10 @@ export class ReceivablesService {
   }
 
   async findAll(
+    filterReceivableDto: FilterReceivableDto,
     userId: string,
-    startDate?: Date,
-    endDate?: Date,
-    minAmount?: number,
   ): Promise<Receivable[]> {
+    const { startDate, endDate, minAmount } = filterReceivableDto;
     const query: any = { uid: userId };
 
     if (startDate) {

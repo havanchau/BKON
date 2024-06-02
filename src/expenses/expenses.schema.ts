@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsPositive } from 'class-validator';
 import { HydratedDocument } from 'mongoose';
 
 export type ExpenseDocument = HydratedDocument<Expense>;
@@ -19,6 +19,7 @@ export class Expense {
 
   @Prop({ required: true })
   @IsNumber()
+  @IsPositive()
   @ApiProperty({ type: Number, description: 'amount' })
   amount: number;
 

@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Debt, DebtDocument } from './debts.schema';
 import { CreateDebtDto } from './dto/create-debt.dto';
 import { UpdateDebtDto } from './dto/update-debt.dto';
+import { FilterDebtDto } from './dto/filter-debt.dto';
 
 @Injectable()
 export class DebtsService {
@@ -21,11 +22,10 @@ export class DebtsService {
   }
 
   async findAll(
+    filterDebtDto: FilterDebtDto,
     userId: string,
-    startDate?: Date,
-    endDate?: Date,
-    minAmount?: number,
   ): Promise<Debt[]> {
+    const { startDate, endDate, minAmount } = filterDebtDto;
     const query: any = { uid: userId };
 
     if (startDate) {

@@ -20,6 +20,12 @@ export class BaseDebtDto {
   amount: number;
 
   @ApiProperty({
+    type: Number,
+    description: 'paid',
+  })
+  paid: number;
+
+  @ApiProperty({
     type: String,
     description: 'lenderName',
   })

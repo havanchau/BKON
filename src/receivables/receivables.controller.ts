@@ -22,6 +22,7 @@ import {
 } from '@nestjs/common';
 import { UpdateReceivableDto } from './dto/update-receivables.dto';
 import { CreateReceivableDto } from './dto/create-receivable.dto';
+import { FilterReceivableDto } from './dto/filter-receivable.dto';
 import { Receivable } from './receivables.schema';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -52,19 +53,15 @@ export class ReceivablesController {
   })
   @ApiQuery({ name: 'startDate', required: false, type: String })
   @ApiQuery({ name: 'endDate', required: false, type: String })
-  @ApiQuery({ name: 'minAmount', required: false, type: Number })
+  @ApiQuery({ name: 'minAmount', required: false, type: String })
   async findAll(
-    @Query('startDate') startDate?: Date,
-    @Query('endDate') endDate?: Date,
-    @Query('minAmount') minAmount?: Number,
+    @Query() filterReceivableDto: FilterReceivableDto,
     @Request() req: any,
   ) {
     const userId = req.user.userId;
     const receivables = await this.receivablesService.findAll(
+      filterReceivableDto,
       userId,
-      startDate && new Date(startDate),
-      endDate && new Date(endDate),
-      minAmount,
     );
     return receivables;
   }

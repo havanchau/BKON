@@ -100,4 +100,11 @@ export class UsersService {
     }
     return deletedUser;
   }
+
+  async checkUnique(email: string, username: string): Promise<boolean> {
+    const isAlivedEmail = await this.userModel.findOne({ email }).exec();
+    const isAlivedUsername = await this.userModel.findOne({ username }).exec();
+
+    return !isAlivedEmail && !isAlivedUsername;
+  }
 }

@@ -68,7 +68,7 @@ export class CashesController {
     @Query('endDate') endDate?: string,
     @Query('top') top?: string,
   ): Promise<any> {
-    const topNumber = top ? parseInt(top, 10) : 50;
+    const topNumber = top ? parseInt(top, 10) : 10;
     return this.cashesService.findById(
       id,
       req.user.userId,

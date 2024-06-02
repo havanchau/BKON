@@ -20,6 +20,12 @@ export class BaseReceivableDto {
   amount: number;
 
   @ApiProperty({
+    type: Number,
+    description: 'received',
+  })
+  received: number;
+
+  @ApiProperty({
     type: String,
     description: 'lenderName',
   })
